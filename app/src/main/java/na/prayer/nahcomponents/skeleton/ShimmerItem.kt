@@ -1,7 +1,8 @@
 package na.prayer.nahcomponents.skeleton
 
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -27,21 +27,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
-import na.prayer.components.shimmer
 import na.prayer.components.shimmerEffect
 
 @Composable
 fun ShimmerItem(
-    isLoading: Boolean,
+    data: String?,
 ) {
+    val isLoading= data.isNullOrEmpty()
     var textFirst by remember { mutableStateOf("") }
     var textSecond by remember { mutableStateOf("") }
     var textTriple by remember { mutableStateOf("") }
 
-    LaunchedEffect(key1 = isLoading) {
-        if(!isLoading){
-            textFirst = "이 글은 첫 번째 글입니다."
+    LaunchedEffect(key1 = data) {
+        if(!data.isNullOrEmpty()){
+            textFirst = data
             textSecond = "이 글은 두 번째 글입니다."
             textTriple = "이 글은 세 번째 글입니다."
         }
@@ -49,12 +48,15 @@ fun ShimmerItem(
 
     Row(modifier = Modifier
         .fillMaxSize()
+        .clickable {
+            Log.d("ShimmerItem", "ShimmerItem: $data")
+        }
         .padding(all = 10.dp), verticalAlignment = Alignment.Top) {
 
         Icon(modifier = Modifier
             .size(80.dp)
             .clip(RoundedCornerShape(10.dp))
-            .shimmer(isLoading),
+            .shimmerEffect(isLoading),
             imageVector = Icons.Default.Home, contentDescription = "Home"
         )
         Spacer(modifier = Modifier.width(10.dp))
@@ -63,7 +65,7 @@ fun ShimmerItem(
                 .height(20.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .fillMaxWidth(fraction = 0.5f)
-                .shimmer(isLoading)
+                .shimmerEffect(isLoading)
                 , text = textFirst
             )
 
@@ -72,7 +74,7 @@ fun ShimmerItem(
                 .height(20.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .fillMaxWidth(fraction = 0.7f)
-                .shimmer(isLoading)
+                .shimmerEffect(isLoading)
                 , text = textSecond
             )
 
@@ -81,7 +83,7 @@ fun ShimmerItem(
                 .height(20.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .fillMaxWidth(fraction = 0.9f)
-                .shimmer(isLoading)
+                .shimmerEffect(isLoading)
                 , text = textTriple
             )
         }

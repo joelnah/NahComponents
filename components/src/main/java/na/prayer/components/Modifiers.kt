@@ -19,37 +19,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntSize
 
 //스켈레톤 UI
-fun Modifier.shimmerEffect(): Modifier = composed {
-    var size by remember { mutableStateOf(IntSize.Zero) }
-    val transition = rememberInfiniteTransition()
-    val startOffsetX by transition.animateFloat(
-        initialValue = -2 * size.width.toFloat(),
-        targetValue = 2 * size.width.toFloat(),
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000)
-        ),
-    )
-
-    background(
-        brush = Brush.linearGradient(
-            colors = listOf(
-                Color(0xFFB8B5B5),
-                Color(0xFF8F8B8B),
-                Color(0xFFB8B5B5),
-            ),
-            start = Offset(startOffsetX, 0f),
-            end = Offset(startOffsetX + size.width.toFloat(), size.height.toFloat())
-        )
-    )
-        .onGloballyPositioned {
-            size = it.size
-        }
-}
-
-
-//스켈레톤 UI
-fun Modifier.shimmer(
-    isLoading:Boolean,
+fun Modifier.shimmerEffect(
+    isLoading: Boolean,
     brushColor: Color = Color.LightGray
 ): Modifier = composed {
     val gradient = listOf(
@@ -79,9 +50,10 @@ fun Modifier.shimmer(
         )
     )
 
-    if(isLoading){
-        background(brush = brush)
-    }else{
-        background(color = Color.Transparent)
-    }
+    then(
+        if (isLoading)
+            background(brush = brush)
+        else
+            this
+    )
 }
